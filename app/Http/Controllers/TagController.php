@@ -60,7 +60,11 @@ class TagController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        // Cari tag berdasarkan ID (UUID)
+        $tag = \App\Models\Tag::findOrFail($id);
+
+        // Tampilkan view edit sambil membawa data tag tadi
+        return view('tags.edit', compact('tag'));
     }
 
     /**
@@ -68,7 +72,21 @@ class TagController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Validasi input
+        $request->validate([
+            'nama' => 'required|max:255'
+        ]);
+
+        // Cari tag yang mau diupdate
+        $tag = \App\Models\Tag::findOrFail($id);
+
+        // Update datanya
+        $tag->update([
+            'nama' => $request->nama
+        ]);
+
+        // Kembalikan ke halaman index
+        return redirect()->route('tags.index')->with('success', 'Tag berhasil diperbarui!');
     }
 
     /**
@@ -76,6 +94,13 @@ class TagController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // Cari tag-nya
+        $tag = \App\Models\Tag::findOrFail($id);
+
+        // Hapus!
+        $tag->delete();
+
+        // Kembali ke index
+        return redirect()->route('tags.index')->with('success', 'Tag berhasil dihapus!');
     }
 }

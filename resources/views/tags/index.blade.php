@@ -31,7 +31,15 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $tag->nama }}</td>
                     <td>
-                        Edit | Hapus (Nanti)
+                        <a href="{{ route('tags.edit', $tag->id) }}">Edit</a>
+
+                        |
+
+                        <form action="{{ route('tags.destroy', $tag->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE') <button type="submit"
+                                onclick="return confirm('Yakin mau hapus?')">Hapus</button>
+                        </form>
                     </td>
                 </tr>
             @endforeach
