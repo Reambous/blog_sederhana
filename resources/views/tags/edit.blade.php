@@ -1,29 +1,35 @@
-<!DOCTYPE html>
-<html>
+@extends('layout')
 
-<head>
-    <title>Edit Tag</title>
-</head>
+@section('title', 'Edit Tag')
 
-<body>
+@section('content')
 
-    <h1>Edit Tag</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Edit Tag</h5>
+                </div>
+                <div class="card-body">
 
-    <form action="{{ route('tags.update', $tag->id) }}" method="POST">
+                    <form action="{{ route('tags.update', $tag->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
 
-        @csrf
+                        <div class="mb-3">
+                            <label class="form-label">Nama Tag</label>
+                            <input type="text" name="nama" class="form-control" value="{{ $tag->nama }}" required>
+                        </div>
 
-        @method('PUT')
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ route('tags.index') }}" class="btn btn-light">Batal</a>
+                            <button type="submit" class="btn btn-success">Update Tag</button>
+                        </div>
+                    </form>
 
-        <label>Nama Tag:</label>
-        <input type="text" name="nama" value="{{ $tag->nama }}">
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <button type="submit">Update</button>
-    </form>
-
-    <br>
-    <a href="{{ route('tags.index') }}">Batal</a>
-
-</body>
-
-</html>
+@endsection

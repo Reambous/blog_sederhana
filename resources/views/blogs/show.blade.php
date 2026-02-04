@@ -1,124 +1,74 @@
-<!DOCTYPE html>
-<html>
+@extends('layout')
 
-<head>
-    <title>{{ $blog->judul }}</title>
-    <style>
-        .container {
-            width: 60%;
-            margin: auto;
-            font-family: sans-serif;
-        }
+@section('title', $blog->judul)
 
-        .img-fluid {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
+@section('content')
 
-        .badge {
-            background: #eee;
-            padding: 5px 10px;
-            border-radius: 5px;
-            margin-right: 5px;
-        }
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
 
-        .comment-box {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-        }
+            <div class="card p-4 mb-5">
+                <div class="mb-3 text-center">
+                    @foreach ($blog->tags as $tag)
+                        <span class="badge bg-warning text-dark">{{ $tag->nama }}</span>
+                    @endforeach
+                    <h1 class="fw-bold mt-2">{{ $blog->judul }}</h1>
+                    <p class="text-muted">
+                        Ditulis oleh <b>{{ $blog->user->name }}</b> &bull; {{ $blog->created_at->format('d M Y') }}
+                    </p>
+                </div>
 
-        .error {
-            color: red;
-            font-size: 0.9em;
-        }
-    </style>
-</head>
+                @if ($blog->gambar)
+                    <img src="{{ asset('storage/' . $blog->gambar) }}" class="img-fluid rounded mb-4 w-100">
+                @endif
 
-<body>
-
-    <div class="container">
-
-        <a href="{{ route('blogs.index') }}">&larr; Kembali ke Daftar</a>
-
-        <br><br>
-
-        <h1>{{ $blog->judul }}</h1>
-
-        <p>
-            <small>Ditulis oleh: <b>{{ $blog->user->name }}</b> | {{ $blog->created_at->format('d M Y') }}</small>
-        </p>
-
-        <img src="{{ asset('storage/' . $blog->gambar) }}" class="img-fluid">
-
-        <div style="margin-top: 15px;">
-            @foreach ($blog->tags as $tag)
-                <span class="badge">#{{ $tag->nama }}</span>
-            @endforeach
-        </div>
-
-        <hr>
-
-        <p style="line-height: 1.6;">
-            {!! nl2br(e($blog->isi)) !!}
-        </p>
-
-        <br>
-        <hr><br>
-
-
-        <h3>Komentar Pembaca ({{ $blog->comments->count() }})</h3>
-
-        @forelse($blog->comments as $comment)
-            <div class="comment-box">
-                <b>{{ $comment->nama }}</b>
-                <small style="color: grey;">({{ $comment->created_at->diffForHumans() }})</small>
-                <br>
-                {{ $comment->komentar }}
+                <div class="article-content" style="line-height: 1.8; font-size: 1.1rem;">
+                    {!! nl2br(e($blog->isi)) !!}
+                </div>
             </div>
-        @empty
-            <p>Belum ada komentar. Jadilah yang pertama!</p>
-        @endforelse
 
+            <div class="card bg-light border-0">
+                <div class="card-body p-4">
+                    <h4 class="mb-4">💬 Komentar ({{ $blog->comments->count() }})</h4>
 
-        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin-top: 30px;">
-            <h4>Tulis Komentar</h4>
+                    @foreach ($blog->comments as $comment)
+                        <div class="d-flex mb-3 pb-3 border-bottom">
+                            <div class="flex-shrink-0">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($comment->nama) }}&background=random"
+                                    class="rounded-circle" width="40">
+                            </div>
+                            <div class="ms-3">
+                                <h6 class="mb-0 fw-bold">{{ $comment->nama }}</h6>
+                                <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                                <p class="mt-1 mb-0">{{ $comment->komentar }}</p>
+                            </div>
+                        </div>
+                    @endforeach
 
-            @if (session('success'))
-                <div style="color: green; margin-bottom: 10px;">{{ session('success') }}</div>
-            @endif
+                    <div class="mt-4">
+                        <h5>Tulis Komentar</h5>
+                        <form action="{{ route('comments.store') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="blog_id" value="{{ $blog->id }}">
 
-            <form action="{{ route('comments.store') }}" method="POST">
-                @csrf
-
-                <input type="hidden" name="blog_id" value="{{ $blog->id }}">
-
-                <div>
-                    <label>Nama:</label><br>
-                    <input type="text" name="nama" style="width: 100%" required>
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <input type="text" name="nama" class="form-control" placeholder="Nama Kamu"
+                                        required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="email" name="email" class="form-control" placeholder="Email (Privat)"
+                                        required>
+                                </div>
+                            </div>
+                            <textarea name="komentar" class="form-control mb-2" rows="3" placeholder="Tulis tanggapanmu..." required></textarea>
+                            <button type="submit" class="btn btn-primary">Kirim</button>
+                        </form>
+                    </div>
                 </div>
+            </div>
 
-                <div style="margin-top: 10px;">
-                    <label>Email:</label><br>
-                    <input type="email" name="email" style="width: 100%" required>
-                </div>
-
-                <div style="margin-top: 10px;">
-                    <label>Isi Komentar:</label><br>
-                    <textarea name="komentar" rows="3" style="width: 100%" required></textarea>
-                </div>
-
-                <br>
-                <button type="submit">Kirim Komentar</button>
-            </form>
         </div>
-
-        <br><br><br>
-
     </div>
 
-</body>
-
-</html>
+@endsection

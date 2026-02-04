@@ -1,27 +1,39 @@
-<!DOCTYPE html>
-<html>
+@extends('layout')
 
-<head>
-    <title>Buat Tag Baru</title>
-</head>
+@section('title', 'Buat Tag Baru')
 
-<body>
+@section('content')
 
-    <h1>Buat Tag Baru</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Buat Tag Baru</h5>
+                </div>
+                <div class="card-body">
 
-    <form action="{{ route('tags.store') }}" method="POST">
+                    <form action="{{ route('tags.store') }}" method="POST">
+                        @csrf
 
-        @csrf
+                        <div class="mb-3">
+                            <label class="form-label">Nama Tag</label>
+                            <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror"
+                                placeholder="Contoh: Tutorial" required>
 
-        <label>Nama Tag:</label>
-        <input type="text" name="nama" placeholder="Contoh: Coding">
+                            @error('nama')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-        <button type="submit">Simpan</button>
-    </form>
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ route('tags.index') }}" class="btn btn-light">Batal</a>
+                            <button type="submit" class="btn btn-primary">Simpan Tag</button>
+                        </div>
+                    </form>
 
-    <br>
-    <a href="{{ route('tags.index') }}">Kembali</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-</body>
-
-</html>
+@endsection

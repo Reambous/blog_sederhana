@@ -41,7 +41,7 @@
                         <a class="nav-link" href="{{ route('blogs.index') }}">Beranda</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-primary text-white ms-2 px-4" href="{{ route('blogs.create') }}">+
+                        <a class="nav-link btn btn-primary  ms-2 px-4" href="{{ route('blogs.create') }}">+
                             Tulis Blog</a>
                     </li>
                     <li class="nav-item">
