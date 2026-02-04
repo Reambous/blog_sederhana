@@ -87,16 +87,16 @@ class BlogController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $blog = Blog::findOrFail($id);
+        $tags = Tag::all(); // Kita butuh daftar semua tag untuk pilihan
+
+        return view('blogs.edit', compact('blog', 'tags'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+    public function update(Request $request, string $id) {}
 
     /**
      * Remove the specified resource from storage.

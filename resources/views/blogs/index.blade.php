@@ -26,7 +26,11 @@
                         <img src="{{ asset('storage/' . $blog->gambar) }}" width="100">
                     </td>
                     <td>
-                        <b>{{ $blog->judul }}</b>
+                        <b>
+                            <a href="{{ route('blogs.show', $blog->id) }}">
+                                {{ $blog->judul }}
+                            </a>
+                        </b>
                         <br>
                         <small>
                             Tags:
