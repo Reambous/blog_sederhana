@@ -66,6 +66,19 @@
                                 @endforeach
                             </div>
                         </div>
+                        <div class="alert alert-warning mt-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="hapus_komentar" value="1"
+                                    id="checkHapus">
+                                <label class="form-check-label text-danger fw-bold" for="checkHapus">
+                                    ⚠️ Hapus semua komentar lama?
+                                </label>
+                                <div class="form-text">
+                                    Centang ini jika kamu mengubah isi artikel secara drastis agar komentar lama tidak
+                                    membingungkan pembaca baru.
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-success btn-lg">Simpan Perubahan</button>

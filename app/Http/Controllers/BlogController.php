@@ -131,6 +131,12 @@ class BlogController extends Controller
         // sync() otomatis menghapus tag lama dan mengganti dengan yang baru dipilih
         $blog->tags()->sync($request->tags);
 
+        // Cek apakah admin mencentang kotak "Hapus Komentar"?
+        if ($request->has('hapus_komentar')) {
+            // Hapus semua komentar milik blog ini
+            $blog->comments()->delete();
+        }
+
         return redirect()->route('blogs.index')->with('success', 'Blog berhasil diperbarui!');
     }
 
