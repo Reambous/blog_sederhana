@@ -7,6 +7,7 @@ use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class BlogController extends Controller
 {
@@ -49,16 +50,12 @@ class BlogController extends Controller
             $gambarPath = $request->file('gambar')->store('blogs', 'public');
         }
 
-        // C. Ambil User (SEMENTARA: Pakai user pertama yg kita buat di seeder tadi)
-        // Nanti kalau sudah ada login, ini diganti jadi: auth()->id()
-        $user = User::first();
-
         // D. Simpan ke Database Blogs
         $blog = Blog::create([
             'judul'   => $request->judul,
             'isi'     => $request->isi,
             'gambar'  => $gambarPath,
-            'user_id' => $user->id
+            'user_id' => Auth::id()
         ]);
 
         // E. Simpan Relasi Tags (Pivot)

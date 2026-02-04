@@ -18,6 +18,9 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    public $incrementing = false; // Beri tahu Laravel ID-nya tidak urut otomatis
+    protected $keyType = 'string'; // Beri tahu Laravel ID-nya berupa String (UUID)
+
     protected $fillable = [
         'name',
         'email',

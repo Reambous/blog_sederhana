@@ -28,7 +28,6 @@ class AuthController extends Controller
             $request->session()->regenerate(); // Buat session baru (keamanan)
             return redirect()->intended('/blogs')->with('success', 'Berhasil Login! Selamat datang kembali.');
         }
-
         // Jika gagal:
         return back()->withErrors([
             'email' => 'Email atau password salah.',

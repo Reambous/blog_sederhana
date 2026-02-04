@@ -33,7 +33,7 @@
 
                     @foreach ($blog->comments as $comment)
                         <div class="d-flex mb-3 pb-3 border-bottom">
-                            <div class="flex-shrink-0">
+                            <div class="shrink-0">
                                 <img src="https://ui-avatars.com/api/?name={{ urlencode($comment->nama) }}&background=random"
                                     class="rounded-circle" width="40">
                             </div>

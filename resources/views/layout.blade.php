@@ -36,17 +36,42 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('blogs.index') }}">Beranda</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-primary  ms-2 px-4" href="{{ route('blogs.create') }}">+
-                            Tulis Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tags.index') }}">Kelola Tags</a>
-                    </li>
+
+                    @auth
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-primary  ms-2 px-3 btn-sm" href="{{ route('blogs.create') }}">+ Tulis
+                                Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('tags.index') }}">Kelola Tags</a>
+                        </li>
+
+                        <li class="nav-item dropdown ms-2">
+                            <a class="nav-link dropdown-toggle fw-bold" href="#" role="button"
+                                data-bs-toggle="dropdown">
+                                👤 {{ Auth::user()->name }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item text-danger">Keluar / Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    @endauth
+
+                    @guest
+                        <li class="nav-item ms-2">
+                            <a class="nav-link btn btn-outline-primary px-4 btn-sm" href="{{ route('login') }}">Login
+                                Admin</a>
+                        </li>
+                    @endguest
                 </ul>
             </div>
         </div>

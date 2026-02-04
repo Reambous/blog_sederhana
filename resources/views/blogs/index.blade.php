@@ -37,26 +37,29 @@
                             </a>
                         </h5>
 
-                        <p class="card-text text-muted small flex-grow-1">
+                        <p class="card-text text-muted small grow">
                             {{ Str::limit($blog->isi, 100) }}
                         </p>
 
                         <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
                             <small class="text-muted">✍️ {{ $blog->user->name }}</small>
+                            @auth
 
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">⋮</button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{{ route('blogs.edit', $blog->id) }}">Edit</a></li>
-                                    <li>
-                                        <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST">
-                                            @csrf @method('DELETE')
-                                            <button class="dropdown-item text-danger"
-                                                onclick="return confirm('Hapus?')">Hapus</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
+
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">⋮</button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{{ route('blogs.edit', $blog->id) }}">Edit</a></li>
+                                        <li>
+                                            <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST">
+                                                @csrf @method('DELETE')
+                                                <button class="dropdown-item text-danger"
+                                                    onclick="return confirm('Hapus?')">Hapus</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            @endauth
                         </div>
                     </div>
                 </div>
