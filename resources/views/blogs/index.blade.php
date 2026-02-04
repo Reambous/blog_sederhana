@@ -17,6 +17,7 @@
                 <th>Gambar</th>
                 <th>Judul & Tags</th>
                 <th>Penulis</th>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -26,11 +27,7 @@
                         <img src="{{ asset('storage/' . $blog->gambar) }}" width="100">
                     </td>
                     <td>
-                        <b>
-                            <a href="{{ route('blogs.show', $blog->id) }}">
-                                {{ $blog->judul }}
-                            </a>
-                        </b>
+                        <b><a href="{{ route('blogs.show', $blog->id) }}">{{ $blog->judul }}</a></b>
                         <br>
                         <small>
                             Tags:
@@ -40,11 +37,21 @@
                         </small>
                     </td>
                     <td>{{ $blog->user->name }}</td>
+
+                    <td>
+                        <a href="{{ route('blogs.edit', $blog->id) }}">Edit</a>
+                        |
+                        <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" onclick="return confirm('Hapus blog ini?')">Hapus</button>
+                        </form>
+                    </td>
+
                 </tr>
             @endforeach
         </tbody>
     </table>
-
 </body>
 
 </html>

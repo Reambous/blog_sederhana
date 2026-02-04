@@ -96,13 +96,59 @@ class BlogController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id) {}
+    public function update(Request $request, string $id)
+    {
+        // Validasi (Gambar tidak wajib diisi/nullable saat edit)
+        $request->validate([
+            'judul'   => 'required|max:255',
+            'isi'     => 'required',
+            'gambar'  => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'tags'    => 'array'
+        ]);
+
+        $blog = Blog::findOrFail($id);
+
+        // Cek apakah user upload gambar baru?
+        if ($request->hasFile('gambar')) {
+            // Hapus gambar lama dari storage biar hemat memori
+            if ($blog->gambar) {
+                Storage::disk('public')->delete($blog->gambar);
+            }
+            // Simpan gambar baru
+            $gambarPath = $request->file('gambar')->store('blogs', 'public');
+
+            // Update path gambar di database
+            $blog->update(['gambar' => $gambarPath]);
+        }
+
+        // Update Judul & Isi
+        $blog->update([
+            'judul' => $request->judul,
+            'isi'   => $request->isi
+        ]);
+
+        // Update Relasi Tags (PENTING)
+        // sync() otomatis menghapus tag lama dan mengganti dengan yang baru dipilih
+        $blog->tags()->sync($request->tags);
+
+        return redirect()->route('blogs.index')->with('success', 'Blog berhasil diperbarui!');
+    }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $blog = Blog::findOrFail($id);
+
+        // Hapus gambar fisiknya dulu dari folder storage
+        if ($blog->gambar) {
+            Storage::disk('public')->delete($blog->gambar);
+        }
+
+        // Hapus datanya dari database (Otomatis hapus komen & tag karena 'cascade')
+        $blog->delete();
+
+        return redirect()->route('blogs.index')->with('success', 'Blog berhasil dihapus!');
     }
 }
