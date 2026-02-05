@@ -39,4 +39,7 @@ Route::middleware('auth')->group(function () {
 
     // Tag: Semua fitur tag hanya untuk admin
     Route::resource('tags', TagController::class);
+
+    // Tambah ini:
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 });

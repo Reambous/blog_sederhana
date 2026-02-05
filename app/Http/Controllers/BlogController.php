@@ -16,7 +16,8 @@ class BlogController extends Controller
      */
     public function index()
     {
-        $blogs = Blog::latest()->get(); // Ambil data terbaru
+        // Ubah dari get() ke paginate(6)
+        $blogs = Blog::latest()->paginate(6);
         return view('blogs.index', compact('blogs'));
     }
 
