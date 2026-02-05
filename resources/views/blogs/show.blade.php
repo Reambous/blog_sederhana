@@ -10,12 +10,13 @@
             <div class="card p-4 mb-5">
                 <div class="mb-3 text-center">
                     @foreach ($blog->tags as $tag)
-                        <span class="badge bg-warning text-dark">{{ $tag->nama }}</span>
+                        <a href="{{ route('blogs.byTag', $tag->id) }}"
+                            class="badge bg-warning text-dark text-decoration-none">
+                            {{ $tag->nama }}
+                        </a>
                     @endforeach
+
                     <h1 class="fw-bold mt-2">{{ $blog->judul }}</h1>
-                    <p class="text-muted">
-                        Ditulis oleh <b>{{ $blog->user->name }}</b> &bull; {{ $blog->created_at->format('d M Y') }}
-                    </p>
                 </div>
 
                 @if ($blog->gambar)

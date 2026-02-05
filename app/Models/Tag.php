@@ -8,8 +8,16 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Tag extends Model
 {
-    use HasFactory, HasUuids; // 2. Pakai fitur UUID
+    use HasFactory, HasUuids;
 
-    // 3. Keamanan: Hanya kolom 'nama' yang boleh diisi dari formulir
     protected $fillable = ['nama'];
+
+    // --- TAMBAHKAN INI ---
+    // Relasi Kebalikan: Tag dimiliki oleh Banyak Blog
+    public function blogs()
+    {
+        // belongsToMany artinya "Milik Banyak"
+        // 'blog_tag' adalah nama tabel penghubungnya
+        return $this->belongsToMany(Blog::class, 'blog_tag');
+    }
 }

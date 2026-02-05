@@ -43,6 +43,9 @@
 
                     @auth
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link btn btn-primary  ms-2 px-3 btn-sm" href="{{ route('blogs.create') }}">+ Tulis
                                 Blog</a>
                         </li>

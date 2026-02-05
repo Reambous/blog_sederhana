@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
+
 class BlogController extends Controller
 {
     /**
@@ -16,9 +17,13 @@ class BlogController extends Controller
      */
     public function index()
     {
-        // Ubah dari get() ke paginate(6)
-        $blogs = Blog::latest()->paginate(6);
-        return view('blogs.index', compact('blogs'));
+        // 1. withCount('comments'): Hitung jumlah komentar otomatis
+        $blogs = Blog::withCount('comments')->latest()->paginate(6);
+
+        // 2. Ambil semua tag untuk menu sidebar
+        $tags = Tag::all();
+
+        return view('blogs.index', compact('blogs', 'tags'));
     }
 
     /**
@@ -154,5 +159,18 @@ class BlogController extends Controller
         $blog->delete();
 
         return redirect()->route('blogs.index')->with('success', 'Blog berhasil dihapus!');
+    }
+
+    public function filterByTag(string $id)
+    {
+        $tag = Tag::findOrFail($id);
+
+        // Filter blog berdasarkan tag, tapi tetap hitung komentarnya
+        $blogs = $tag->blogs()->withCount('comments')->latest()->paginate(6);
+
+        // Kita tetap butuh daftar semua tag untuk sidebar
+        $tags = Tag::all();
+
+        return view('blogs.index', compact('blogs', 'tags', 'tag'));
     }
 }

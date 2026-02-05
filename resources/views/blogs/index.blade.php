@@ -1,77 +1,124 @@
 @extends('layout')
 
-@section('title', 'Daftar Artikel')
+@section('title', 'Beranda Blog')
 
 @section('content')
 
-    <div class="row mb-4 align-items-center">
-        <div class="col">
-            <h2 class="fw-bold">Artikel Terbaru</h2>
-            <p class="text-muted">Baca tulisan menarik dari komunitas kami.</p>
+    <div class="row">
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
+                <div class="card-header bg-white fw-bold">
+                    🏷️ Pilihan Kategori
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ route('blogs.index') }}"
+                        class="list-group-item list-group-item-action {{ !isset($tag) ? 'active' : '' }}">
+                        Semua Artikel
+                    </a>
+
+                    @foreach ($tags as $t)
+                        <a href="{{ route('blogs.byTag', $t->id) }}"
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ isset($tag) && $tag->id == $t->id ? 'active' : '' }}">
+
+                            {{ $t->nama }}
+
+                            <span class="badge bg-secondary rounded-pill" style="font-size: 0.7em;">
+                                {{ $t->blogs()->count() }}
+                            </span>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-9">
+
+            <div class="mb-4">
+                @if (isset($tag))
+                    <h3 class="fw-bold">📂 Kategori: <span class="text-primary">{{ $tag->nama }}</span></h3>
+                    <p class="text-muted">Menampilkan artikel sesuai pilihanmu.</p>
+                @else
+                    <h3 class="fw-bold">Artikel Terbaru</h3>
+                    <p class="text-muted">Baca tulisan menarik dari komunitas kami.</p>
+                @endif
+            </div>
+
+            <div class="row">
+                @forelse($blogs as $blog)
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm hover-card">
+                            <div style="height: 200px; overflow: hidden; background: #eee;">
+                                @if ($blog->gambar)
+                                    <img src="{{ asset('storage/' . $blog->gambar) }}" class="card-img-top"
+                                        style="object-fit: cover; height: 100%; width: 100%;">
+                                @else
+                                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">No Image
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="card-body d-flex flex-column">
+                                <div class="mb-2">
+                                    @foreach ($blog->tags->take(2) as $blogTag)
+                                        <span class="badge bg-light text-dark border">{{ $blogTag->nama }}</span>
+                                    @endforeach
+                                </div>
+
+                                <h5 class="card-title fw-bold">
+                                    <a href="{{ route('blogs.show', $blog->id) }}"
+                                        class="text-decoration-none text-dark stretched-link">
+                                        {{ $blog->judul }}
+                                    </a>
+                                </h5>
+
+                                <p class="card-text text-muted small grow">
+                                    {{ Str::limit($blog->isi, 80) }}
+                                </p>
+
+                                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                    <small class="text-muted">
+                                        👤 {{ $blog->user->name }}
+                                    </small>
+
+                                    <small class="text-muted">
+                                        💬 {{ $blog->comments_count }} Komentar
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-12 text-center py-5">
+                        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486754.png" width="100"
+                            class="mb-3 opacity-50">
+                        <h5 class="text-muted">Belum ada artikel di kategori ini.</h5>
+                        <a href="{{ route('blogs.index') }}" class="btn btn-outline-primary mt-2">Lihat Semua</a>
+                    </div>
+                @endforelse
+            </div>
+
+            <div class="d-flex justify-content-center mt-4">
+                {{ $blogs->links() }}
+            </div>
+
         </div>
     </div>
 
-    <div class="row">
-        @forelse($blogs as $blog)
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div style="height: 200px; overflow: hidden; background: #eee;">
-                        @if ($blog->gambar)
-                            <img src="{{ asset('storage/' . $blog->gambar) }}" class="card-img-top"
-                                style="object-fit: cover; height: 100%; width: 100%;">
-                        @else
-                            <div class="d-flex align-items-center justify-content-center h-100 text-muted">No Image</div>
-                        @endif
-                    </div>
+    <style>
+        .hover-card {
+            transition: transform 0.2s;
+        }
 
-                    <div class="card-body d-flex flex-column">
-                        <div class="mb-2">
-                            @foreach ($blog->tags as $tag)
-                                <span class="badge bg-warning text-dark me-1">{{ $tag->nama }}</span>
-                            @endforeach
-                        </div>
+        .hover-card:hover {
+            transform: translateY(-5px);
+        }
 
-                        <h5 class="card-title">
-                            <a href="{{ route('blogs.show', $blog->id) }}" class="text-decoration-none text-dark">
-                                {{ $blog->judul }}
-                            </a>
-                        </h5>
-
-                        <p class="card-text text-muted small grow">
-                            {{ Str::limit($blog->isi, 100) }}
-                        </p>
-
-                        <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
-                            <small class="text-muted">✍️ {{ $blog->user->name }}</small>
-                            @auth
-
-
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">⋮</button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ route('blogs.edit', $blog->id) }}">Edit</a></li>
-                                        <li>
-                                            <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST">
-                                                @csrf @method('DELETE')
-                                                <button class="dropdown-item text-danger"
-                                                    onclick="return confirm('Hapus?')">Hapus</button>
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </div>
-                            @endauth
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @empty
-            <div class="col-12 text-center py-5">
-                <h4 class="text-muted">Belum ada artikel. Yuk nulis!</h4>
-            </div>
-        @endforelse
-    </div>
-    <div class="d-flex justify-content-center mt-5">
-        {{ $blogs->links() }}
-    </div>
+        .list-group-item.active {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+    </style>
 
 @endsection

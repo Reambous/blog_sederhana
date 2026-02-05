@@ -23,7 +23,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Blog: Index & Show (Baca doang boleh umum)
 Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
+
+// Jalur untuk melihat blog berdasarkan Tag
+Route::get('/kategori/{id}', [BlogController::class, 'filterByTag'])->name('blogs.byTag');
+
 Route::get('/blogs/{id}', [BlogController::class, 'show'])->name('blogs.show');
+
 
 // Komentar (Umum boleh komen)
 Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
