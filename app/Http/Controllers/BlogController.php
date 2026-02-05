@@ -17,10 +17,25 @@ class BlogController extends Controller
      */
     public function index()
     {
-        // 1. withCount('comments'): Hitung jumlah komentar otomatis
-        $blogs = Blog::withCount('comments')->latest()->paginate(6);
+        // Mulai Query Dasar (belum dieksekusi)
+        // Kita siapkan query untuk mengambil Blog + Hitung Komentar
+        $query = Blog::withCount('comments')->latest();
 
-        // 2. Ambil semua tag untuk menu sidebar
+        // --- LOGIKA PENCARIAN ---
+        // Cek: Apakah di URL ada ?search=sesuatu ?
+        if (request('search')) {
+            // Kalau ada, filter query-nya
+            $query->where(function ($q) {
+                $q->where('judul', 'like', '%' . request('search') . '%')
+                    ->orWhere('isi', 'like', '%' . request('search') . '%');
+            });
+        }
+        // ------------------------
+
+        // Eksekusi (ambil datanya dengan pagination)
+        $blogs = $query->paginate(6);
+
+        // Ambil tags untuk sidebar
         $tags = Tag::all();
 
         return view('blogs.index', compact('blogs', 'tags'));

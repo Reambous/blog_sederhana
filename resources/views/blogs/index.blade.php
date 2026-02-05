@@ -7,6 +7,18 @@
     <div class="row">
 
         <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3">🔍 Cari Artikel</h5>
+                    <form action="{{ route('blogs.index') }}" method="GET">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Ketik judul..."
+                                value="{{ request('search') }}">
+                            <button class="btn btn-primary" type="submit">Cari</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
                 <div class="card-header bg-white fw-bold">
                     🏷️ Pilihan Kategori
@@ -36,7 +48,13 @@
         <div class="col-md-9">
 
             <div class="mb-4">
-                @if (isset($tag))
+                @if (request('search'))
+                    <h3 class="fw-bold">Hasil Pencarian: "<span class="text-primary">{{ request('search') }}</span>"</h3>
+                    <p class="text-muted">
+                        Ditemukan {{ $blogs->total() }} artikel.
+                        <a href="{{ route('blogs.index') }}" class="text-decoration-none">Reset Pencarian</a>
+                    </p>
+                @elseif(isset($tag))
                     <h3 class="fw-bold">📂 Kategori: <span class="text-primary">{{ $tag->nama }}</span></h3>
                     <p class="text-muted">Menampilkan artikel sesuai pilihanmu.</p>
                 @else
