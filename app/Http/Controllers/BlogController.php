@@ -33,7 +33,7 @@ class BlogController extends Controller
         // ------------------------
 
         // Eksekusi (ambil datanya dengan pagination)
-        $blogs = $query->paginate(6);
+        $blogs = $query->paginate(4);
 
         // Ambil tags untuk sidebar
         $tags = Tag::all();
