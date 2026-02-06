@@ -85,7 +85,8 @@
                                 </div>
 
                                 <h5 class="card-title fw-bold">
-                                    <a href="{{ route('blogs.show', $blog->id) }}" class="text-decoration-none text-dark ">
+                                    <a href="{{ route('blogs.show', $blog->id) }}"
+                                        class="text-decoration-none text-dark stretched-link">
                                         {{ $blog->judul }}
                                     </a>
                                 </h5>
@@ -112,7 +113,8 @@
                                     </div>
 
                                     @auth
-                                        <div class="d-flex gap-2">
+                                        <div class="d-flex gap-2" style="position: relative; z-index: 2;">
+
                                             <a href="{{ route('blogs.edit', $blog->id) }}"
                                                 class="btn btn-sm btn-outline-warning" title="Edit">
                                                 ✏️

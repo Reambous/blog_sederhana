@@ -29,7 +29,7 @@
                         <div class="mb-3">
                             <label class="form-label">Judul Artikel</label>
                             <input type="text" name="judul" class="form-control @error('judul') is-invalid @enderror"
-                                value="{{ old('judul') }}" required>
+                                value="{{ old('judul', $blog->judul) }}" required>
 
                             @error('judul')
                                 <div class="invalid-feedback">
@@ -59,7 +59,8 @@
 
                         <div class="mb-3">
                             <label class="form-label">Isi Tulisan</label>
-                            <textarea name="isi" rows="10" class="form-control @error('isi') is-invalid @enderror" required>{{ old('isi') }}</textarea>
+
+                            <textarea name="isi" class="form-control @error('isi') is-invalid @enderror" rows="10" required>{{ old('isi', $blog->isi) }}</textarea>
                             @error('isi')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -71,8 +72,8 @@
                                 @foreach ($tags as $tag)
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="tags[]"
-                                            value="{{ $tag->id }}" id="tag{{ $tag->id }}" {{-- LOGIKA: Cek apakah tag ini ada di daftar tags milik blog ini? --}}
-                                            {{ $blog->tags->contains($tag->id) ? 'checked' : '' }}>
+                                            value="{{ $tag->id }}" id="tag{{ $tag->id }}" {{-- Logika: Cek apakah tag ini ada di database ($blog->tags) ATAU ada di inputan lama (old tags) --}}
+                                            {{ (is_array(old('tags')) && in_array($tag->id, old('tags'))) || $blog->tags->contains($tag->id) ? 'checked' : '' }}>
                                         <label class="form-check-label"
                                             for="tag{{ $tag->id }}">{{ $tag->nama }}</label>
                                     </div>
