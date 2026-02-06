@@ -39,29 +39,34 @@
                                     class="rounded-circle" width="40">
                             </div>
                             <div class="ms-3 w-100">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h6 class="mb-0 fw-bold">
-                                        {{ $comment->nama }}
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">
+                                            {{ $comment->nama }}
+                                            @if ($blog->updated_at->gt($comment->created_at))
+                                                <span class="badge bg-warning text-dark ms-1" style="font-size: 0.7em;">⚠️
+                                                    Versi Lama</span>
+                                            @endif
+                                        </h6>
+                                        <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                                    </div>
 
-                                        @if ($blog->updated_at->gt($comment->created_at))
-                                            <span class="badge bg-warning text-dark ms-2" style="font-size: 0.7em;"
-                                                title="Komentar ini diposting pada versi artikel sebelumnya">
-                                                ⚠️ Versi Lama
-                                            </span>
-                                        @endif
-                                    </h6>
-                                    <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                                    @auth
+                                        <form action="{{ route('comments.destroy', $comment->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="btn btn-sm btn-outline-danger border-0 py-0 btn-delete"
+                                                title="Hapus Komentar">
+                                                🗑️
+                                            </button>
+                                        </form>
+                                    @endauth
                                 </div>
 
                                 <p class="mt-1 mb-0 {{ $blog->updated_at->gt($comment->created_at) ? 'text-muted' : '' }}">
                                     {{ $comment->komentar }}
                                 </p>
-
-                                @if ($blog->updated_at->gt($comment->created_at))
-                                    <small style="font-size: 0.75rem; color: #d63384;">
-                                        *Artikel telah diedit setelah komentar ini.
-                                    </small>
-                                @endif
                             </div>
                         </div>
                     @endforeach

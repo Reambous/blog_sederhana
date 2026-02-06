@@ -85,8 +85,7 @@
                                 </div>
 
                                 <h5 class="card-title fw-bold">
-                                    <a href="{{ route('blogs.show', $blog->id) }}"
-                                        class="text-decoration-none text-dark stretched-link">
+                                    <a href="{{ route('blogs.show', $blog->id) }}" class="text-decoration-none text-dark ">
                                         {{ $blog->judul }}
                                     </a>
                                 </h5>
@@ -96,13 +95,39 @@
                                 </p>
 
                                 <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
-                                    <small class="text-muted">
-                                        👤 {{ $blog->user->name }}
-                                    </small>
+                                    <div class="d-flex align-items-center gap-2">
+                                        @if ($blog->user->gambar)
+                                            <img src="{{ asset('storage/' . $blog->user->gambar) }}" class="rounded-circle"
+                                                style="width: 35px; height: 35px; object-fit: cover;">
+                                        @else
+                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center border"
+                                                style="width: 35px; height: 35px;">👤</div>
+                                        @endif
 
-                                    <small class="text-muted">
-                                        💬 {{ $blog->comments_count }} Komentar
-                                    </small>
+                                        <div>
+                                            <small class="fw-bold d-block text-dark">{{ $blog->user->name }}</small>
+                                            <small class="text-muted d-block" style="font-size: 0.75rem;">💬
+                                                {{ $blog->comments_count }} Komentar</small>
+                                        </div>
+                                    </div>
+
+                                    @auth
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ route('blogs.edit', $blog->id) }}"
+                                                class="btn btn-sm btn-outline-warning" title="Edit">
+                                                ✏️
+                                            </a>
+
+                                            <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-outline-danger btn-delete"
+                                                    title="Hapus">
+                                                    🗑️
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @endauth
                                 </div>
                             </div>
                         </div>

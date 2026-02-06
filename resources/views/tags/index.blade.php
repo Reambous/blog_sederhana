@@ -39,8 +39,7 @@
                                             style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger"
-                                                onclick="return confirm('Yakin hapus tag ini? Blog yang pakai tag ini akan kehilangan labelnya.')">Hapus</button>
+                                            <button type="submit" class="btn btn-sm btn-danger btn-delete">Hapus</button>
                                         </form>
                                     </td>
                                 </tr>

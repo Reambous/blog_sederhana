@@ -32,4 +32,17 @@ class CommentController extends Controller
         // 4. Kembali ke halaman blog tadi (back)
         return back()->with('success', 'Komentar berhasil dikirim!');
     }
+
+    // Hapus Komentar (Khusus Admin)
+    public function destroy(string $id)
+    {
+        // Cari komentar, kalau gak ada error 404
+        $comment = Comment::findOrFail($id);
+
+        // Hapus
+        $comment->delete();
+
+        // Kembali ke halaman sebelumnya (blog detail) dengan pesan sukses
+        return back()->with('success', 'Komentar berhasil dihapus demi kebersihan!');
+    }
 }

@@ -28,8 +28,14 @@
 
                         <div class="mb-3">
                             <label class="form-label">Judul Artikel</label>
-                            <input type="text" name="judul" class="form-control"
-                                value="{{ old('judul', $blog->judul) }}" required>
+                            <input type="text" name="judul" class="form-control @error('judul') is-invalid @enderror"
+                                value="{{ old('judul') }}" required>
+
+                            @error('judul')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
@@ -44,12 +50,19 @@
                                 </div>
                             @endif
 
-                            <input type="file" name="gambar" class="form-control" accept="image/*">
+                            <input type="file" name="gambar" class="form-control @error('gambar') is-invalid @enderror"
+                                accept="image/*">
+                            @error('gambar')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Isi Tulisan</label>
-                            <textarea name="isi" class="form-control" rows="10" required>{{ old('isi', $blog->isi) }}</textarea>
+                            <textarea name="isi" rows="10" class="form-control @error('isi') is-invalid @enderror" required>{{ old('isi') }}</textarea>
+                            @error('isi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">

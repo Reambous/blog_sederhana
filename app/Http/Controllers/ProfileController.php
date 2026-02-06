@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash; // Untuk enkripsi password
 use Illuminate\Support\Facades\Auth; // Untuk ambil data user login
 use Illuminate\Validation\Rule;      // Untuk validasi email unik
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -23,28 +24,40 @@ class ProfileController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // Validasi
+        // 1. Validasi
         $request->validate([
             'name'  => 'required|string|max:255',
-            // Pastikan email unik, TAPI abaikan (ignore) email milik user ini sendiri
             'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
-            // Password boleh kosong (nullable) kalau tidak mau diganti
+            // Validasi Foto: Harus gambar, maks 2MB
+            'foto'  => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'password' => 'nullable|min:6|confirmed',
         ]);
 
-        // Update Data Dasar
+        // 2. Update Data Dasar
         $user->name = $request->name;
         $user->email = $request->email;
 
-        // Cek: Apakah user mengisi password baru?
+        // 3. Proses Upload Foto (LOGIKA BARU)
+        if ($request->hasFile('foto')) {
+            // A. Hapus foto lama jika ada (dan bukan foto default/kosong)
+            if ($user->gambar) {
+                Storage::disk('public')->delete($user->gambar);
+            }
+
+            // B. Simpan foto baru ke folder 'profiles'
+            $path = $request->file('foto')->store('profiles', 'public');
+
+            // C. Simpan path-nya ke database
+            $user->gambar = $path;
+        }
+
+        // 4. Update Password (jika diisi)
         if ($request->filled('password')) {
-            // Hash password baru dan simpan
             $user->password = Hash::make($request->password);
         }
 
-        // Simpan ke database (karena model User pakai UUID & incrementing=false, kita pakai save() biasa aman)
         $user->save();
 
-        return back()->with('success', 'Profil berhasil diperbarui!');
+        return back()->with('success', 'Profil dan foto berhasil diperbarui!');
     }
 }

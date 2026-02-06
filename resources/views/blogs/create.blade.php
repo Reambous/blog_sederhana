@@ -3,7 +3,6 @@
 @section('title', 'Tulis Baru')
 
 @section('content')
-
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -27,17 +26,31 @@
 
                         <div class="mb-3">
                             <label class="form-label">Judul Artikel</label>
-                            <input type="text" name="judul" class="form-control" value="{{ old('judul') }}" required>
+                            <input type="text" name="judul" class="form-control @error('judul') is-invalid @enderror"
+                                value="{{ old('judul') }}" required>
+
+                            @error('judul')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Gambar Utama</label>
-                            <input type="file" name="gambar" class="form-control" accept="image/*" required>
+                            <input type="file" name="gambar" class="form-control @error('gambar') is-invalid @enderror"
+                                accept="image/*">
+                            @error('gambar')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Isi Tulisan</label>
-                            <textarea name="isi" class="form-control" rows="8" required>{{ old('isi') }}</textarea>
+                            <textarea name="isi" rows="10" class="form-control @error('isi') is-invalid @enderror" required>{{ old('isi') }}</textarea>
+                            @error('isi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">

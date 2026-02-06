@@ -12,11 +12,31 @@
                 </div>
                 <div class="card-body p-4">
 
-                    <form action="{{ route('profile.update') }}" method="POST">
+                    <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
                         <h5 class="mb-3 text-primary">Data Diri</h5>
+
+                        <div class="mb-4 text-center">
+                            <div class="mb-2">
+                                @if ($user->gambar)
+                                    <img src="{{ asset('storage/' . $user->gambar) }}" class="rounded-circle border"
+                                        style="width: 100px; height: 100px; object-fit: cover;">
+                                @else
+                                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto"
+                                        style="width: 100px; height: 100px; font-size: 2rem;">
+                                        👤
+                                    </div>
+                                @endif
+                            </div>
+
+                            <label class="btn btn-sm btn-outline-primary cursor-pointer">
+                                📸 Ganti Foto
+                                <input type="file" name="foto" class="d-none" accept="image/*"
+                                    onchange="this.form.submit()">
+                            </label>
+                        </div>
 
                         <div class="mb-3">
                             <label class="form-label">Nama Lengkap</label>
